@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System;
 public class GameManager : MonoBehaviour
 {
     public float score;
@@ -28,9 +31,36 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Save()
     {
-        Debug.Log(score);
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
+        PlayerData data = new PlayerData();
+        data.score = score;
+        data.level = level;
+        data.xp = xp;
+        bf.Serialize(file, data);
+        file.Close();
     }
+    public void Load()
+    {
+        if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
+            PlayerData data = (PlayerData)bf.Deserialize(file);
+            file.Close() ;
+            score = data.score;
+            level = data.level;
+            xp = data.xp;
+        }
+    }
+
+    [Serializable]
+    class PlayerData
+    {
+        public float score;
+        public float level;
+        public float xp;
+    }  
 }
