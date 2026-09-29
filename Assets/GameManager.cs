@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public float xp;
     public static GameManager instance;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Awake()
     {
         if(instance == null)
@@ -17,12 +18,13 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             instance = this;
         }
+
         else if(instance!= this)
         {
-         Destroy(gameObject); 
+            Destroy(gameObject); 
         }
-
     }
+
     void OnGUI()
     {
         GUI.Label(new Rect(10, 30, 100, 30), "Score:" + score);
